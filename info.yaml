@@ -16,13 +16,13 @@ project:
 #
 # This info will be automatically collected and used to make a datasheet for the chip.
 documentation: 
-  author:       ""      # Spehro Pefhany
+  author:       "Spehro Pefhany"      
   discord:      ""      # Your discord handle - make sure to include the # part as well
-  title:        ""      # POV display
-  description:  ""      # controls stepper motor and 8 LEDs to display a fixed message loaded in from a 25LC1024 eeprom. 
+  title:        "POV Display "      # 
+  description:  "controls stepper motor and 8 LEDs to display a fixed message loaded in from a 25LC1024 eeprom"
   how_it_works: ""      # Longer description of how the project works
   how_to_test:  ""      # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
-  external_hw:  ""      # 25LC1024 EEPROM, A4988 stepper driver module, 74HC595 driving  8 LEDs with 8 resistors 
+  external_hw:  "25LC1024 EEPROM, A4988 stepper driver module, 74HC595 driving  8 high brightness LEDs with 8 resistors"
   language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
   clock_hz:     0       # Clock frequency in Hz (if required) we are expecting max clock frequency to be ~6khz. Provided on input 0.
