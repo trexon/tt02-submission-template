@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-`default_nettype wire
+`default_nettype none
 `timescale 1ns/1ps
 
 module trexon_main (
@@ -50,9 +50,9 @@ module trexon_main (
   
 
 
-endmodule
 
 
+/*
 module main(
 //    input fpga_clk, // just for testing! 
     input clk,
@@ -76,6 +76,35 @@ module main(
     input unused_3,
     input unused_4
     );
+ */
+module trexon_main (
+    input [7:0] io_in,
+    output [7:0] io_out
+    );
+  wire clk = io_in[0];
+  wire nrset = io_in[1];
+  wire eeprom_out = io_in[2]; 
+  wire run_nstop = io_in[3]; 
+  
+  wire eeprom_cs; 
+  assign io_out[0] = eeprom_cs;
+  wire eeprom_in; 
+	assign io_out[1] = eeprom_in;
+  wire eeprom_clk; 
+	assign io_out[2] = eeprom_clk;
+  wire hc595_clk; 
+	assign io_out[3] = hc595_clk;
+  wire hc595_lat; 
+	assign io_out[4] = hc595_lat;
+  wire hc595_noe; 
+	assign io_out[5] = hc595_noe;
+  wire hc595_dat_and_stepper_dat; 
+	assign io_out[6] = hc595_dat_and_stepper_dat;
+  wire stepper_step; 
+	assign io_out[7] = stepper_step;
+  
+    
+    
 localparam IDLE_state = 0,
            EEPROM_INSTRUCTION_state = 1,
 		     EEPROM_READING_state = 2,
