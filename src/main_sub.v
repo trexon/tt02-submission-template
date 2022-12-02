@@ -39,7 +39,7 @@ module trexon_main (
 	assign io_out[2] = eeprom_clk;
   wire hc595_clk; 
 	assign io_out[3] = hc595_clk;
-  wire hc595_lat 
+  wire hc595_lat; 
 	assign io_out[4] = hc595_lat;
   wire hc595_noe; 
 	assign io_out[5] = hc595_noe;
