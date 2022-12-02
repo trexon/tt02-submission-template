@@ -248,7 +248,7 @@ always @(*)
 		.pixels(pixels)
 	);
 // instantiate shift registers with depth of 100 and default with of 8 
-	bidi_shift_register   #(.SR_DEPTH(50)) shift_reg (
+	bidi_shift_register   #(.SR_DEPTH(20)) shift_reg (
 		.clk(clk), 
 		.nreset(sr_reset), 
 		.input_data(sr_input_data), 
