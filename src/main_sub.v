@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-`default_nettype wire
+`default_nettype none
 `timescale 1ns/1ps
 
 module trexon_main (
@@ -81,7 +81,7 @@ module main(
 
 // instantiate spi1 module - EEPROM read SPI 
 	spi_send_receive spi1 (
-		.clk(spi1_clk), 
+		.clk(wire spi1_clk), 
 		.nreset(spi1_reset), 
 		.mosi(spi1_mosi), 
 		.miso(spi1_miso), 
