@@ -6,7 +6,7 @@ project:
     - main_sub.v
     - bidi_shift_register.v
     - stepper_control_v2.v
-    - spi_send_recieve.v 
+    - spi_send_receive.v 
   top_module:  "trexon_main"      # put the name of your top module here, make it unique by prepending your github username
 
 # As everyone will have access to all designs, try to make it easy for someone new to your design to know what
