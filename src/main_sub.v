@@ -78,6 +78,65 @@ module main(
     );
  */
 
+
+// instantiate spi1 module - EEPROM read SPI 
+	spi_send_receive spi1 (
+		.clk(spi1_clk), 
+		.nreset(spi1_reset), 
+		.mosi(spi1_mosi), 
+		.miso(spi1_miso), 
+		.sclk(spi1_sclk),
+		.cs(spi1_cs), 
+		.din(spi1_din), 
+		.dout(spi1_dout), 
+		.data_valid(spi1_data_valid), 
+		.processing (spi1_processing), 
+		.send_request(spi1_send_request), 
+		.cs_at_end(spi1_cs_at_end),
+		.bit_counter(spi1_bit_counter)
+	);
+
+
+// instantiate spi2 module - output SPI 
+	spi_send_receive spi2 (
+		.clk(spi2_clk), 
+		.nreset(spi2_reset), 
+		.mosi(spi2_mosi), 
+		.miso(spi2_miso), 
+		.sclk(spi2_sclk),
+		.cs(spi2_cs), 
+		.din(spi2_din), 
+		.dout(spi2_dout), 
+		.data_valid(spi2_data_valid), 
+		.processing (spi2_processing), 
+		.send_request(spi2_send_request), 
+		.cs_at_end(spi2_cs_at_end),
+		.bit_counter(spi2_bit_counter)
+	);
+
+// instantiate stepper control 
+	stepper_control_v2 stepper (
+		.clk(clk), 
+		.nreset(stepper_reset), 
+		.run(stepper_run_in), 
+		.step(step), 
+		.dir(dir),
+		.pixel_clock(pixel_clock), 
+		.nOE(nOE), 
+		.pixels(pixels)
+	);
+// instantiate shift registers with depth of 100 and default with of 8 
+	bidi_shift_register   #(.SR_DEPTH(100)) shift_reg (
+		.clk(clk), 
+		.nreset(sr_reset), 
+		.input_data(sr_input_data), 
+		.output_data(sr_output_data), 
+		.direction(sr_direction), 
+		.shift(sr_shift),    // shift on positive edge 
+		.input_rotate(sr_input_rotate)
+	);
+		
+	
     
 localparam IDLE_state = 0,
            EEPROM_INSTRUCTION_state = 1,
@@ -121,6 +180,9 @@ wire [7:0] spi2_din;
  
  reg spi1_data_valid_dly; // delayed version by one clock 
  reg spi2_data_valid_dly; // delayed version by one clock 
+	
+	
+	
  
  // test stuff!!! 
 // 
@@ -206,63 +268,6 @@ always @(*)
  assign spi1_din = ((eeprom_byte == 0) && (current_state == EEPROM_INSTRUCTION_state)) ? 8'h3:8'h0; 
  assign spi2_din = sr_output_data;
 
-// instantiate spi1 module - EEPROM read SPI 
-	spi_send_receive spi1 (
-		.clk(spi1_clk), 
-		.nreset(spi1_reset), 
-		.mosi(spi1_mosi), 
-		.miso(spi1_miso), 
-		.sclk(spi1_sclk),
-		.cs(spi1_cs), 
-		.din(spi1_din), 
-		.dout(spi1_dout), 
-		.data_valid(spi1_data_valid), 
-		.processing (spi1_processing), 
-		.send_request(spi1_send_request), 
-		.cs_at_end(spi1_cs_at_end),
-		.bit_counter(spi1_bit_counter)
-	);
-
-
-// instantiate spi2 module - output SPI 
-	spi_send_receive spi2 (
-		.clk(spi2_clk), 
-		.nreset(spi2_reset), 
-		.mosi(spi2_mosi), 
-		.miso(spi2_miso), 
-		.sclk(spi2_sclk),
-		.cs(spi2_cs), 
-		.din(spi2_din), 
-		.dout(spi2_dout), 
-		.data_valid(spi2_data_valid), 
-		.processing (spi2_processing), 
-		.send_request(spi2_send_request), 
-		.cs_at_end(spi2_cs_at_end),
-		.bit_counter(spi2_bit_counter)
-	);
-
-// instantiate stepper control 
-	stepper_control_v2 stepper (
-		.clk(clk), 
-		.nreset(stepper_reset), 
-		.run(stepper_run_in), 
-		.step(step), 
-		.dir(dir),
-		.pixel_clock(pixel_clock), 
-		.nOE(nOE), 
-		.pixels(pixels)
-	);
-// instantiate shift registers with depth of 100 and default with of 8 
-	bidi_shift_register   #(.SR_DEPTH(100)) shift_reg (
-		.clk(clk), 
-		.nreset(sr_reset), 
-		.input_data(sr_input_data), 
-		.output_data(sr_output_data), 
-		.direction(sr_direction), 
-		.shift(sr_shift),    // shift on positive edge 
-		.input_rotate(sr_input_rotate)
-	);
-	
 
 initial  // simulation only 
 begin
