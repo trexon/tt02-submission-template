@@ -1,11 +1,12 @@
 --- 
 # TinyTapeout project information
 project:
-  wokwi_id:    347910717168419412        # If using wokwi, set this to your project's ID
-#  source_files:        # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. Source files must be in ./src
-#    - counter.v
-#    - decoder.v
-#  top_module:  "seven_segment_seconds"      # put the name of your top module here, make it unique by prepending your github username
+  wokwi_id:    0        # If using wokwi, set this to your project's ID
+  source_files:        # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. Source files must be in ./src
+    - bidi_shift_register.v
+    - stepper_control_v2.v
+    - spi_send_recieve.v 
+  top_module:  "trexon_main"      # put the name of your top module here, make it unique by prepending your github username
 
 # As everyone will have access to all designs, try to make it easy for someone new to your design to know what
 # it does and how to operate it.
@@ -14,33 +15,34 @@ project:
 #
 # This info will be automatically collected and used to make a datasheet for the chip.
 documentation: 
-  author:       ""      # Your name
+  author:       ""      # Spehro Pefhany
   discord:      ""      # Your discord handle - make sure to include the # part as well
-  title:        ""      # Project title
-  description:  ""      # Short description of what your project does
+  title:        ""      # POV display
+  description:  ""      # controls stepper motor and 8 LEDs to display a fixed message loaded in from a 25LC1024 eeprom. 
   how_it_works: ""      # Longer description of how the project works
   how_to_test:  ""      # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
-  external_hw:  ""      # Describe any external hardware needed
-  language:     "wokwi" # other examples include Verilog, Amaranth, VHDL, etc
+  external_hw:  ""      # 25LC1024 EEPROM, A4988 stepper driver module, 74HC595 driving  8 LEDs with 8 resistors 
+  language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
   clock_hz:     0       # Clock frequency in Hz (if required) we are expecting max clock frequency to be ~6khz. Provided on input 0.
   picture:      ""      # relative path to a picture in your repository
   inputs:               # a description of what the inputs do
-    - clock
-    - reset
+    - clock             # 5-10kHz clock 
+    - nreset            # active low 
+    - eeprom_out        # miso 
+    - run_nstop         # allows arm to return to rest position
     - none
     - none
     - none
-    - none
-    - none
-    - none
+    - none 
   outputs:
-    - segment a         # a description of what the outputs do
-    - segment b
-    - segment c
-    - segment d
-    - segment e
-    - segment f
-    - segment g
-    - none
+    - eeprom_cs         # chip select for SPI EEPROM 
+    - eeprom_in         # mosi 
+    - eeprom_clk        # clock for SPI EEPROM 
+    - hc595_clk         # SRCLK for external shift register 
+    - hc595_latch       # RCLK for external shift register 
+    - hc595_noe         # nOE output enable for external shift register
+    - hc595_dat_and_stepper_dat  # shared SER on exernal shift register and A4988 direction pin
+    - stepper_step      # step input for A4988 
+    
 
