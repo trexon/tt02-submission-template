@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-`default_nettype none
+//`default_nettype none
 `timescale 1ns/1ps
 
 module trexon_main (
@@ -27,117 +27,53 @@ module trexon_main (
     output [7:0] io_out
     );
   wire clk = io_in[0];
-  wire nrset = io_in[1];
+  wire nreset = io_in[1];
   wire eeprom_out = io_in[2]; 
   wire run_nstop = io_in[3]; 
   
-  wire eeprom_cs; 
+  reg eeprom_cs; 
   assign io_out[0] = eeprom_cs;
-  wire eeprom_in; 
-	assign io_out[1] = eeprom_in;
-  wire eeprom_clk; 
-	assign io_out[2] = eeprom_clk;
-  wire hc595_clk; 
-	assign io_out[3] = hc595_clk;
-  wire hc595_lat; 
-	assign io_out[4] = hc595_lat;
-  wire hc595_noe; 
-	assign io_out[5] = hc595_noe;
-  wire hc595_dat_and_stepper_dat; 
-	assign io_out[6] = hc595_dat_and_stepper_dat;
-  wire stepper_step; 
-	assign io_out[7] = stepper_step;
+  reg eeprom_in; 
+  assign io_out[0] = eeprom_in;
+  reg eeprom_clk; 
+  assign io_out[0] = eeprom_clk;
+  reg hc595_clk; 
+  assign io_out[0] = hc595_clk;
+  reg hc595_latch; 
+  assign io_out[0] = hc595_latch;
+  reg hc595_noe; 
+  assign io_out[0] = hc595_noe;
+  reg hc595_dat_and_stepper_dat; 
+  assign io_out[0] = hc595_dat_and_stepper_dat;
+  reg stepper_step; 
+  assign io_out[0] = stepper_step;
   
 
 
 
-
-/*
-module main(
-//    input fpga_clk, // just for testing! 
-    input clk,
-//    output reg clk_out, 
-    input nreset,
-    input eeprom_out,
-    input run_nstop,
-    output reg eeprom_cs, 
-    output reg eeprom_in,
-    output reg eeprom_clk,
-    output reg hc595_clk,
-    output reg hc595_latch,
-    output reg hc595_noe,
-    output reg hc595_dat_and_stepper_dat,
-	 output reg [1:0] my_state,  // just for testing
-	 output reg my_sr_shift, // just for testing 
-    output reg spi_snd_r, 
-    output reg stepper_step,
-    input unused_1,
-    input unused_2,
-    input unused_3,
-    input unused_4
-    );
- */
-
-
-// instantiate spi1 module - EEPROM read SPI 
-	spi_send_receive spi1 (
-		.clk(wire spi1_clk), 
-		.nreset(spi1_reset), 
-		.mosi(spi1_mosi), 
-		.miso(spi1_miso), 
-		.sclk(spi1_sclk),
-		.cs(spi1_cs), 
-		.din(spi1_din), 
-		.dout(spi1_dout), 
-		.data_valid(spi1_data_valid), 
-		.processing (spi1_processing), 
-		.send_request(spi1_send_request), 
-		.cs_at_end(spi1_cs_at_end),
-		.bit_counter(spi1_bit_counter)
-	);
-
-
-// instantiate spi2 module - output SPI 
-	spi_send_receive spi2 (
-		.clk(spi2_clk), 
-		.nreset(spi2_reset), 
-		.mosi(spi2_mosi), 
-		.miso(spi2_miso), 
-		.sclk(spi2_sclk),
-		.cs(spi2_cs), 
-		.din(spi2_din), 
-		.dout(spi2_dout), 
-		.data_valid(spi2_data_valid), 
-		.processing (spi2_processing), 
-		.send_request(spi2_send_request), 
-		.cs_at_end(spi2_cs_at_end),
-		.bit_counter(spi2_bit_counter)
-	);
-
-// instantiate stepper control 
-	stepper_control_v2 stepper (
-		.clk(clk), 
-		.nreset(stepper_reset), 
-		.run(stepper_run_in), 
-		.step(step), 
-		.dir(dir),
-		.pixel_clock(pixel_clock), 
-		.nOE(nOE), 
-		.pixels(pixels)
-	);
-// instantiate shift registers with depth of 100 and default with of 8 
-	bidi_shift_register   #(.SR_DEPTH(100)) shift_reg (
-		.clk(clk), 
-		.nreset(sr_reset), 
-		.input_data(sr_input_data), 
-		.output_data(sr_output_data), 
-		.direction(sr_direction), 
-		.shift(sr_shift),    // shift on positive edge 
-		.input_rotate(sr_input_rotate)
-	);
-		
-	
-    
+//module main(
+////    input fpga_clk, // just for testing! 
+//    input clk,
+////    output reg clk_out, 
+//    input nreset,
+//    input eeprom_out,
+//    input run_nstop,
+//    output reg eeprom_cs, 
+//    output reg eeprom_in,
+//    output reg eeprom_clk,
+//    output reg hc595_clk,
+//    output reg hc595_latch,
+//    output reg hc595_noe,
+//    output reg hc595_dat_and_stepper_dat,
+//	 output reg [1:0] my_state,  // just for testing
+//	 output reg my_sr_shift, // just for testing 
+//    output reg spi_snd_r, 
+//    output reg stepper_step,
+//    input unused_1,
+//    input unused_2,
+//    input unused_3,
+//    input unused_4
+//    );
 localparam IDLE_state = 0,
            EEPROM_INSTRUCTION_state = 1,
 		     EEPROM_READING_state = 2,
@@ -180,9 +116,6 @@ wire [7:0] spi2_din;
  
  reg spi1_data_valid_dly; // delayed version by one clock 
  reg spi2_data_valid_dly; // delayed version by one clock 
-	
-	
-	
  
  // test stuff!!! 
 // 
@@ -248,10 +181,10 @@ always @(*)
 	  
 //	  stepper_step = step;  // need to delay this by one clock pulse 
 	  hc595_noe = nOE; 
-	  my_state = current_state; // test
-	  my_sr_shift = sr_shift; // test 
+//	  my_state = current_state; // test
+//	  my_sr_shift = sr_shift; // test 
 
-	  spi_snd_r = spi1_send_request; 
+//	  spi_snd_r = spi1_send_request;  // test
 	  sr_input_data = spi1_dout; 
 //	  sr_input_data = 8'hAA; // just a test! 
 	
@@ -268,6 +201,63 @@ always @(*)
  assign spi1_din = ((eeprom_byte == 0) && (current_state == EEPROM_INSTRUCTION_state)) ? 8'h3:8'h0; 
  assign spi2_din = sr_output_data;
 
+// instantiate spi1 module - EEPROM read SPI 
+	spi_send_receive spi1 (
+		.clk(spi1_clk), 
+		.nreset(spi1_reset), 
+		.mosi(spi1_mosi), 
+		.miso(spi1_miso), 
+		.sclk(spi1_sclk),
+		.cs(spi1_cs), 
+		.din(spi1_din), 
+		.dout(spi1_dout), 
+		.data_valid(spi1_data_valid), 
+		.processing (spi1_processing), 
+		.send_request(spi1_send_request), 
+		.cs_at_end(spi1_cs_at_end),
+		.bit_counter(spi1_bit_counter)
+	);
+
+
+// instantiate spi2 module - output SPI 
+	spi_send_receive spi2 (
+		.clk(spi2_clk), 
+		.nreset(spi2_reset), 
+		.mosi(spi2_mosi), 
+		.miso(spi2_miso), 
+		.sclk(spi2_sclk),
+		.cs(spi2_cs), 
+		.din(spi2_din), 
+		.dout(spi2_dout), 
+		.data_valid(spi2_data_valid), 
+		.processing (spi2_processing), 
+		.send_request(spi2_send_request), 
+		.cs_at_end(spi2_cs_at_end),
+		.bit_counter(spi2_bit_counter)
+	);
+
+// instantiate stepper control 
+	stepper_control_v2 stepper (
+		.clk(clk), 
+		.nreset(stepper_reset), 
+		.run(stepper_run_in), 
+		.step(step), 
+		.dir(dir),
+		.pixel_clock(pixel_clock), 
+		.nOE(nOE), 
+		.pixels(pixels)
+	);
+// instantiate shift registers with depth of 100 and default with of 8 
+	bidi_shift_register   #(.SR_DEPTH(100)) shift_reg (
+		.clk(clk), 
+		.nreset(sr_reset), 
+		.input_data(sr_input_data), 
+		.output_data(sr_output_data), 
+		.direction(sr_direction), 
+		.shift(sr_shift),    // shift on positive edge 
+		.input_rotate(sr_input_rotate)
+	);
+	
 
 initial  // simulation only 
 begin
