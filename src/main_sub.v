@@ -151,7 +151,7 @@ always @ (*)
         end 		  
       EEPROM_READING_state: 
 		  begin
-         if ((spi1_data_valid) && (eeprom_byte == 8'd100 )) 
+			  if ((spi1_data_valid) && (eeprom_byte == 8'd06 )) 
 
 			    next_state = RUNNING_state; 
         end 		  
@@ -248,7 +248,7 @@ always @(*)
 		.pixels(pixels)
 	);
 // instantiate shift registers with depth of 100 and default with of 8 
-	bidi_shift_register   #(.SR_DEPTH(5)) shift_reg (
+	bidi_shift_register   #(.SR_DEPTH(6)) shift_reg (
 		.clk(clk), 
 		.nreset(sr_reset), 
 		.input_data(sr_input_data), 
